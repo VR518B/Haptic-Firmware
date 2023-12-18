@@ -1,8 +1,7 @@
-#include <ESP8266WiFi.h>
 #include <config.h>
 #include <motor.h>
 
-uint8_t currentStrInput[NUM_PINS];
+uint8_t currentStrInput[NUM_MOTORS];
 
 uint8_t attenuationSpeed = 20;
 uint32_t attenuationDelay = 10000;
@@ -22,7 +21,7 @@ uint8_t CalculateAttenuation(uint8_t currentStrength, uint lastUpdate)
 
   if (sinceLastUpdate < attenuationDelay)
   {
-    Serial.print("Not reached attenuation delay yet \n");
+    //Serial.print("Not reached attenuation delay yet \n");
     return currentStrength;
   }
 
@@ -33,27 +32,27 @@ uint8_t CalculateAttenuation(uint8_t currentStrength, uint lastUpdate)
   // speed * delta_time
   uint8_t attenuationValue = floor((float)attenuationSpeed * timeElapsed);
   
-  Serial.print("Attenuation value: ");
-  Serial.println(attenuationValue);
+  //Serial.print("Attenuation value: ");
+  //Serial.println(attenuationValue);
 
   // Integer overflow! Yay!
   if (attenuationValue > currentStrength)
   {
-    Serial.print("Reached negative strength \n");
+    //Serial.print("Reached negative strength \n");
     LastAttenuation = millis();
     return 0;
   }
 
-  Serial.print("Ramping down to: ");
-  Serial.println(currentStrength - attenuationValue);
+  //Serial.print("Ramping down to: ");
+  //Serial.println(currentStrength - attenuationValue);
   LastAttenuation = millis();
   return currentStrength - attenuationValue;
 }
 
 void WriteToMotor(size_t motorID, uint8_t Str)
 {
-  static unsigned long lastTimeUpdated[NUM_PINS];
-  static uint8_t currentMotorOutput[NUM_PINS];
+  static unsigned long lastTimeUpdated[NUM_MOTORS];
+  static uint8_t currentMotorOutput[NUM_MOTORS];
 
   if (currentStrInput[motorID] != Str)
   {
@@ -84,7 +83,7 @@ void UpdateMotorStrength(uint8_t *StrArray, size_t length)
     Serial.print(" ");
 
     // Set PWM pins based of of recieved strength values
-    if (i < NUM_PINS)
+    if (i < NUM_MOTORS)
     {
       WriteToMotor(i, StrArray[i]);
     }
@@ -100,7 +99,7 @@ void UpdateAttenuationFunc(struct Attenuation_Control control)
 
 void CheckStrAttenuation()
 {
-  for (size_t i = 0; i < NUM_PINS; i++)
+  for (size_t i = 0; i < NUM_MOTORS; i++)
   {
     WriteToMotor(i, currentStrInput[i]);
   }

@@ -1,4 +1,4 @@
-#include <ESP8266WiFi.h>
+#include <Arduino.h>
 #include <WebSocketsServer.h>
 #include <config.h>
 #include <motor.h>
@@ -25,8 +25,9 @@ void setup()
   for (size_t i = 0; i < NUM_MOTORS; i++)
   {
     // pinMode(PWM_PINS[i], OUTPUT);
-    WriteToMotor(i, 0);
+    WriteToMotor(i, 128);
   }
+
 }
 
 void loop()

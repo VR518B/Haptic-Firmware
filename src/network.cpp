@@ -1,4 +1,4 @@
-#include <ESP8266WiFi.h>
+#include <WiFi.h>
 #include <WebSocketsServer.h>
 #include <motor.h>
 #include <packet.h>
