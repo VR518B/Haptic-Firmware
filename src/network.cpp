@@ -1,4 +1,11 @@
+#include <config.h>
+
+#if BOARD == ESP32
 #include <WiFi.h>
+#elseif BOARD == ESP8266
+#include <ESP8266WiFi.h>
+#endif
+
 #include <WebSocketsServer.h>
 #include <motor.h>
 #include <packet.h>
