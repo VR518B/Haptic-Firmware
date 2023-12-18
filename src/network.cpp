@@ -2,7 +2,7 @@
 
 #if BOARD == ESP32
 #include <WiFi.h>
-#elseif BOARD == ESP8266
+#elif BOARD == ESP8266
 #include <ESP8266WiFi.h>
 #endif
 
