@@ -21,30 +21,22 @@ uint8_t CalculateAttenuation(uint8_t currentStrength, uint lastUpdate)
 
   if (sinceLastUpdate < attenuationDelay)
   {
-    //Serial.print("Not reached attenuation delay yet \n");
     return currentStrength;
   }
-
 
   // Calculate how much to decrease the strength this loop
   // the amount of time that has elapsed since we last attenuated
   float timeElapsed = (float)(millis() - LastAttenuation) * 0.001;
   // speed * delta_time
   uint8_t attenuationValue = floor((float)attenuationSpeed * timeElapsed);
-  
-  //Serial.print("Attenuation value: ");
-  //Serial.println(attenuationValue);
 
   // Integer overflow! Yay!
   if (attenuationValue > currentStrength)
   {
-    //Serial.print("Reached negative strength \n");
     LastAttenuation = millis();
     return 0;
   }
 
-  //Serial.print("Ramping down to: ");
-  //Serial.println(currentStrength - attenuationValue);
   LastAttenuation = millis();
   return currentStrength - attenuationValue;
 }
