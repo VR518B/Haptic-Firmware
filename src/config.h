@@ -24,6 +24,5 @@ const size_t MOTORS_PER_DRIVER = 16;
 const unsigned int FALLOFF_REFRESH_RATE = 10; // how often, in HZ, should we update the falloff of haptic sensors. 
 const uint8_t PWM_PINS[] = {27};
 const size_t NUM_PINS = sizeof(PWM_PINS) / sizeof(*PWM_PINS);
-const uint FALLOFF_REFRESH_RATE = 10; // how often, in HZ, should we update the falloff of haptic sensors.
 
 #endif
