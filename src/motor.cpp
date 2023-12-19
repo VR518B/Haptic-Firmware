@@ -2,8 +2,6 @@
 #include <config.h>
 #include <motor.h>
 
-uint8_t currentStrInput[NUM_PINS];
-
 uint8_t attenuationSpeed = 20;
 uint32_t attenuationDelay = 10000;
 
@@ -12,6 +10,7 @@ const size_t motorMapLen = NUM_EXT_MOTORS + NUM_PINS;
 PCA9685 pwm[NUM_DRIVERS] = {0}; 
 struct motorMapEntry motorMap[motorMapLen];
 
+uint8_t currentStrInput[motorMapLen];
 
 // initialize all the pwm controllers to the addresses in
 // in the i2c addrs arry in config.h
@@ -126,7 +125,7 @@ void WriteToMotor(size_t motorID, uint8_t Str)
     currentMotorOutput[motorID] = CalculateAttenuation(currentMotorOutput[motorID],
                                                        lastTimeUpdated[motorID]);
 
-    WriteToMap(motorID, Str);
+    WriteToMap(motorID, currentMotorOutput[motorID]);
   }
 }
 
