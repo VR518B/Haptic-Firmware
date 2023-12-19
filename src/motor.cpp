@@ -9,23 +9,25 @@ uint32_t attenuationDelay = 10000;
 
 const size_t NUM_EXT_MOTORS = NUM_DRIVERS * MOTORS_PER_DRIVER;
 const size_t motorMapLen = NUM_EXT_MOTORS + NUM_PINS;
-Adafruit_PWMServoDriver pwm[NUM_DRIVERS] = {0}; 
+PCA9685 pwm[NUM_DRIVERS] = {0}; 
 struct motorMapEntry motorMap[motorMapLen];
 
-// Tell the Adafruit library about all the servo drivers
+// initialize all the pwm controllers to the addresses in
 // in the i2c addrs arry in config.h
-void InitPWM(Adafruit_PWMServoDriver *pwm_list) 
+void InitPWM(PCA9685 *pwm_list) 
 {
   Wire.setClock(400000);
 
   for (size_t i = 0; i < NUM_DRIVERS; i++) 
   {
-    pwm_list[i] = Adafruit_PWMServoDriver(i2c_ADDRS[i], Wire);
+    pwm_list[i] = PCA9685(i2c_ADDRS[i]);
+
+    // Bring all servo drivers to a clean state
+    pwm_list[i].resetDevices();
 
     // Initialize PWM pins
-    pwm_list[i].begin();
-    pwm_list[i].setOscillatorFrequency(27000000);
-    pwm_list[i].setPWMFreq(1600);
+    pwm_list[i].init();
+    pwm_list[i].setPWMFrequency(1600);
   }
 }
 
@@ -98,8 +100,8 @@ void WriteToMap(size_t motorID, uint8_t Str)
     break;
 
     case I2C_DRIVER:
-    Adafruit_PWMServoDriver driver = pwm[motor_entry.i2c.driver];
-    driver.setPWM(motor_entry.i2c.port, 0, Str * 16);
+    PCA9685 driver = pwm[motor_entry.i2c.driver];
+    driver.setChannelPWM(motor_entry.i2c.port, Str << 4);
     break;
   }
 }

@@ -8,6 +8,7 @@
 void setup()
 {
   Serial.begin(115200);
+  Wire.begin();
   delay(200);
   Serial.println(" ");
   Serial.print("Connecting to WiFi");

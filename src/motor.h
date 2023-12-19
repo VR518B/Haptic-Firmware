@@ -5,7 +5,8 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <packet.h>
-#include <Adafruit_PWMServoDriver.h>
+
+#include <PCA9685.h>
 
 enum AccessType 
 {
