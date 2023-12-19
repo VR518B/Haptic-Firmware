@@ -4,9 +4,6 @@
 #include <motor.h>
 #include <network.h>
 #include <Wire.h>
-#include <Adafruit_PWMServoDriver.h>
-
-Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x40, Wire);
 
 void setup()
 {
@@ -17,12 +14,10 @@ void setup()
 
   InitNetwork(WIFI_HOSTNAME, SSID, PASSWORD);
 
-  // Initialize PWM pins
-  pwm.begin();
-  pwm.setOscillatorFrequency(27000000);
-  pwm.setPWMFreq(1600);
-  Wire.setClock(400000);
-  for (size_t i = 0; i < NUM_MOTORS; i++)
+  InitMotorMap();
+
+  int num_motors = (NUM_DRIVERS * MOTORS_PER_DRIVER) + NUM_PINS;
+  for (size_t i = 0; i < num_motors; i++)
   {
     // pinMode(PWM_PINS[i], OUTPUT);
     WriteToMotor(i, 128);
