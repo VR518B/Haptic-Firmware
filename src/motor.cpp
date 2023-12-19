@@ -12,6 +12,7 @@ const size_t motorMapLen = NUM_EXT_MOTORS + NUM_PINS;
 PCA9685 pwm[NUM_DRIVERS] = {0}; 
 struct motorMapEntry motorMap[motorMapLen];
 
+
 // initialize all the pwm controllers to the addresses in
 // in the i2c addrs arry in config.h
 void InitPWM(PCA9685 *pwm_list) 
@@ -108,8 +109,8 @@ void WriteToMap(size_t motorID, uint8_t Str)
 
 void WriteToMotor(size_t motorID, uint8_t Str)
 {
-  static unsigned long lastTimeUpdated[NUM_PINS];
-  static uint8_t currentMotorOutput[NUM_PINS];
+  static unsigned long lastTimeUpdated[motorMapLen];
+  static uint8_t currentMotorOutput[motorMapLen];
 
   if (currentStrInput[motorID] != Str)
   {
@@ -138,7 +139,7 @@ void UpdateMotorStrength(uint8_t *StrArray, size_t length)
     Serial.print(" ");
 
     // Set PWM pins based of of recieved strength values
-    if (i < NUM_PINS)
+    if (i < motorMapLen)
     {
       WriteToMotor(i, StrArray[i]);
     }
@@ -154,7 +155,7 @@ void UpdateAttenuationFunc(struct Attenuation_Control control)
 
 void CheckStrAttenuation()
 {
-  for (size_t i = 0; i < NUM_PINS; i++)
+  for (size_t i = 0; i < motorMapLen; i++)
   {
     WriteToMotor(i, currentStrInput[i]);
   }
