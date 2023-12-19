@@ -1,4 +1,11 @@
+#include <config.h>
+
+#if BOARD == ESP32
+#include <WiFi.h>
+#elif BOARD == ESP8266
 #include <ESP8266WiFi.h>
+#endif
+
 #include <WebSocketsServer.h>
 #include <motor.h>
 #include <packet.h>
@@ -83,6 +90,9 @@ void webSocketEvent(uint8_t num, WStype_t type,
     // handle different the different payload tags
     switch (packet.tag)
     {
+    default:
+      Serial.printf("Unknown packet type recieved: %x\n", packet.tag);
+      break;
     case Motor_Strength:
       UpdateMotorStrength(packet.data, packet.data_len);
       break;
@@ -90,11 +100,12 @@ void webSocketEvent(uint8_t num, WStype_t type,
       // make sure we don't copy a control packet of insufficient length
       if (packet.data_len < sizeof(struct Attenuation_Control))
       {
-        Serial.print("Malformed control packet recieved.");
+        Serial.println("Malformed control packet recieved.");
         break;
       }
 
-      struct Attenuation_Control *control = (struct Attenuation_Control *)(packet.data);
+      struct Attenuation_Control *control = 
+        reinterpret_cast<struct Attenuation_Control *>(packet.data);
       UpdateAttenuationFunc(*control);
       break;
     }
