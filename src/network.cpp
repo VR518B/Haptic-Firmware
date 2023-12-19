@@ -104,7 +104,8 @@ void webSocketEvent(uint8_t num, WStype_t type,
         break;
       }
 
-      struct Attenuation_Control *control = (struct Attenuation_Control *)(packet.data);
+      struct Attenuation_Control *control = 
+        reinterpret_cast<struct Attenuation_Control *>(packet.data);
       UpdateAttenuationFunc(*control);
       break;
     }
