@@ -16,7 +16,7 @@ void setup()
 
   InitMotorMap();
 
-  int num_motors = (NUM_DRIVERS * MOTORS_PER_DRIVER) + NUM_PINS;
+  size_t num_motors = (NUM_DRIVERS * MOTORS_PER_DRIVER) + NUM_PINS;
   for (size_t i = 0; i < num_motors; i++)
   {
     // pinMode(PWM_PINS[i], OUTPUT);
