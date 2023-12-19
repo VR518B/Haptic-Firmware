@@ -1,3 +1,4 @@
+#include <Wire.h>
 #include <config.h>
 #include <motor.h>
 
@@ -43,14 +44,15 @@ uint8_t CalculateAttenuation(uint8_t currentStrength, uint lastUpdate)
 
 void WriteToMotor(size_t motorID, uint8_t Str)
 {
-  static unsigned long lastTimeUpdated[NUM_MOTORS];
-  static uint8_t currentMotorOutput[NUM_MOTORS];
+  Adafruit_PWMServoDriver pwm[] = {Adafruit_PWMServoDriver(i2c_ADDRS[0], Wire)};
+  static unsigned long lastTimeUpdated[NUM_PINS];
+  static uint8_t currentMotorOutput[NUM_PINS];
 
   if (currentStrInput[motorID] != Str)
   {
     // if the input we recieve is new, update
     // analogWrite(PWM_PINS[motorID], Str);
-    pwm.setPWM(PWM_PIN_MAPPING[motorID], 0, (Str * 16));
+    pwm[0].setPWM(PWM_PIN_MAPPING[motorID], 0, (Str * 16));
     currentStrInput[motorID] = Str;
     lastTimeUpdated[motorID] = millis();
     currentMotorOutput[motorID] = Str;
@@ -62,7 +64,7 @@ void WriteToMotor(size_t motorID, uint8_t Str)
                                                        lastTimeUpdated[motorID]);
 
     // analogWrite(PWM_PINS[motorID], currentMotorOutput[motorID]);
-    pwm.setPWM(PWM_PIN_MAPPING[motorID], 0, (currentMotorOutput[motorID] * 16));
+    pwm[0].setPWM(PWM_PIN_MAPPING[motorID], 0, (currentMotorOutput[motorID] * 16));
   }
 }
 
