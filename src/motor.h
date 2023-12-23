@@ -6,8 +6,31 @@
 #include <stddef.h>
 #include <packet.h>
 
-#include <Adafruit_PWMServoDriver.h>
-extern Adafruit_PWMServoDriver pwm;
+#include <PCA9685.h>
+
+enum AccessType 
+{
+  I2C_DRIVER,
+  DATA_PIN
+};
+
+struct i2c_Address{
+  uint8_t driver;
+  uint8_t port;
+};
+
+struct motorMapEntry
+{
+  uint8_t motorAccessType;
+  union 
+  {
+    struct i2c_Address i2c;
+    uint8_t DataPin;
+  };
+};
+
+// Initalize the Motormap structure according to config.h
+void InitMotorMap();
 
 // Takes a motorID assigned in the PWM_PINS array in config.h.
 // Takes a Strength value from 0-255.
